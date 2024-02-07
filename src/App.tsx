@@ -7,10 +7,10 @@ export const App = () => {
   const [active, setActive] = useState(false);
 
   useEffect(() => {
-    // const timer = setInterval(() => {
-    //   console.log("test");
-    // }, 1000);
-    // return () => clearInterval(timer);
+    const timer = setInterval(() => {
+      console.log("test");
+    }, 1000);
+    return () => clearInterval(timer);
   }, []);
 
   const handleStartStop = () => {
