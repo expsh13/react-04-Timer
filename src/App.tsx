@@ -1,13 +1,39 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { Button } from "./components/elements/Button/Button";
 
 export const App = () => {
-  const [time, setTime] = useState<string>("00:00:00");
+  const minutesRef = useRef<HTMLInputElement>(null);
+  const secondsRef = useRef<HTMLInputElement>(null);
+  const [active, setActive] = useState(false);
+
+  useEffect(() => {
+    // const timer = setInterval(() => {
+    //   console.log("test");
+    // }, 1000);
+    // return () => clearInterval(timer);
+  }, []);
+
+  const handleStartStop = () => {
+    const changeActive = !active;
+    setActive(changeActive);
+    if (changeActive) {
+      console.log("active");
+    } else {
+      console.log("no-active");
+    }
+  };
+
   return (
-    <input
-      type="time"
-      value={time}
-      step="1"
-      onChange={(e) => setTime(e.currentTarget.value)}
-    />
+    <>
+      <p>分</p>
+      <input type="number" ref={minutesRef} />
+      <p>秒</p>
+      <input type="number" ref={secondsRef} />
+      <p>
+        time→{minutes}:{seconds}
+      </p>
+      <Button text={active ? "stop" : "start"} onClick={handleStartStop} />
+      <Button text="restart" />
+    </>
   );
 };
