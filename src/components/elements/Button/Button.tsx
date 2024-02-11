@@ -8,7 +8,7 @@ type PropsType = {
 export const Button = (props: PropsType) => {
   const { text, disable, onClick } = props;
   return (
-    <SButton $isDisable={disable} onClick={() => onClick()}>
+    <SButton $isDisable={disable} onClick={() => onClick()} disabled={disable}>
       {text}
     </SButton>
   );

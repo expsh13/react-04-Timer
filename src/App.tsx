@@ -1,6 +1,7 @@
-import { useEffect, useRef, useState } from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { Button } from "./components/elements/Button/Button";
 import styled from "styled-components";
+import mp3 from "./mp3/jinglebells.mp3";
 
 const SRoot = styled.div`
   margin: 0 auto;
@@ -10,6 +11,8 @@ const SButtonWrap = styled.div`
   display: flex;
   gap: 10px;
 `;
+
+const audio = new Audio(mp3);
 
 export const App = () => {
   const minutesRef = useRef<HTMLInputElement>(null);
@@ -26,6 +29,7 @@ export const App = () => {
         setTime((time) => time - 1);
       }, 1000);
     } else if (active && time === 0) {
+      audio.play();
       setActive(false);
     }
     return () => {
@@ -36,6 +40,9 @@ export const App = () => {
   const handleStart = () => {
     const minutes = Number(minutesRef.current?.value);
     const seconds = Number(secondsRef.current?.value);
+
+    console.log(minutes, seconds);
+    console.log(typeof minutes, typeof seconds);
 
     if (Number.isInteger(minutes) && Number.isInteger(seconds)) {
       const allSeconds = minutes * 60 + seconds;
@@ -57,13 +64,21 @@ export const App = () => {
     setActive(false);
   };
 
+  const handleInput = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.value.match(/^[0-9]+$/)) {
+      setValidation(true);
+    } else {
+      setValidation(false);
+    }
+  };
+
   return (
     <SRoot>
       <p>分</p>
-      <input type="number" ref={minutesRef} />
+      <input type="text" ref={minutesRef} onChange={(e) => handleInput(e)} />
       <p>秒</p>
-      <input type="number" ref={secondsRef} />
-      {!validation && <p>数値を入力してください</p>}
+      <input type="text" ref={secondsRef} onChange={(e) => handleInput(e)} />
+      {!validation && <p>半角数値を入力してください</p>}
       <p>
         残り{String(Math.floor(time / 60)).padStart(2, "0")}:
         {String(time % 60).padStart(2, "0")}
@@ -71,7 +86,7 @@ export const App = () => {
       <SButtonWrap>
         <Button
           text="start"
-          disable={active || time !== 0}
+          disable={!validation || active || time !== 0}
           onClick={handleStart}
         />
         <Button
